@@ -168,7 +168,7 @@ public class Inicio extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         Arquives arquivos = new Arquives();
-        arquivos.createConfigFile();
+        arquivos.setup();
     }//GEN-LAST:event_formWindowOpened
 
     /**

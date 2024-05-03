@@ -16,9 +16,13 @@ import java.nio.file.Paths;
  * @author fanbo
  */
 public class Arquives {
-    public String foldertoFiles = "agenda";
-    private final Path pathFoldertoFiles = Paths.get("/"+foldertoFiles);
+    public String folderPendentes = "Pendentes";
+    public String folderConcluidos = "Concluidos";
+    private final Path pathFoldertoPendentes = Paths.get(folderPendentes);
+    private final Path pathFoldertoConcluidos = Paths.get(folderConcluidos);
     private final Path pathConfigFile = Paths.get("Config.txt");
+    
+    public String pendencesTypes[] = {"Tarefas","Ideias"};
     
     
     public void createConfigFile() {
@@ -40,18 +44,41 @@ public class Arquives {
         
     }
     
-    public void createFolder() {
+    public void createFolderPendentes() {
         try {
-            if (!Files.exists(pathFoldertoFiles)){
-                Files.createDirectories(pathFoldertoFiles);
+            if (!Files.exists(pathFoldertoPendentes)){
+                Files.createDirectories(pathFoldertoPendentes);
+                for(int i = 0; i < pendencesTypes.length; i++ ){
+                    Path pathFile = Paths.get(folderPendentes+"/"+pendencesTypes[i]+".txt");
+                    Files.createFile(pathFile);
+                }
             }
         }
         catch (IOException e) {
-            System.err.println("Failed to create directory: "+ foldertoFiles + e.getMessage());
+            System.err.println("Failed to create directory: "+ folderPendentes + e.getMessage());
         }
     }
     
+    public void createFolderConcluidos() {
+        try {
+            if (!Files.exists(pathFoldertoConcluidos)){
+                Files.createDirectories(pathFoldertoConcluidos);
+                for(int i = 0; i < pendencesTypes.length; i++ ){
+                    Path pathFile = Paths.get(folderConcluidos+"/"+pendencesTypes[i]+".txt");
+                    Files.createFile(pathFile);
+                }
+            }
+        }
+        catch (IOException e) {
+            System.err.println("Failed to create directory: "+ folderConcluidos + e.getMessage());
+        }
+    }
     
+    public void setup(){
+        this.createConfigFile();
+        this.createFolderPendentes();
+        this.createFolderConcluidos();
+    }
     
     
 }
