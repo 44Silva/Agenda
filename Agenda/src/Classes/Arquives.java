@@ -4,12 +4,17 @@
  */
 package Classes;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Scanner;
 
 /**
  *
@@ -22,7 +27,7 @@ public class Arquives {
     private final Path pathFoldertoConcluidos = Paths.get(folderConcluidos);
     private final Path pathConfigFile = Paths.get("Config.txt");
     
-    public String pendencesTypes[] = {"Tarefas","Ideias"};
+    public String pendenciesTypes[] = {"Tarefas","Ideias"};
     
     
     public void createConfigFile() {
@@ -31,6 +36,7 @@ public class Arquives {
             final String str = """
                                countTarefas:0 
                                countIdeias:0
+                               tipos:Corpo,Estudos,Aerodinâmica
                                """;
             
             try (BufferedWriter writer = new BufferedWriter(new FileWriter("Config.txt"))) {
@@ -48,8 +54,8 @@ public class Arquives {
         try {
             if (!Files.exists(pathFoldertoPendentes)){
                 Files.createDirectories(pathFoldertoPendentes);
-                for(int i = 0; i < pendencesTypes.length; i++ ){
-                    Path pathFile = Paths.get(folderPendentes+"/"+pendencesTypes[i]+".txt");
+                for(int i = 0; i < pendenciesTypes.length; i++){
+                    Path pathFile = Paths.get(folderPendentes+"/"+pendenciesTypes[i]+".txt");
                     Files.createFile(pathFile);
                 }
             }
@@ -63,8 +69,8 @@ public class Arquives {
         try {
             if (!Files.exists(pathFoldertoConcluidos)){
                 Files.createDirectories(pathFoldertoConcluidos);
-                for(int i = 0; i < pendencesTypes.length; i++ ){
-                    Path pathFile = Paths.get(folderConcluidos+"/"+pendencesTypes[i]+".txt");
+                for(int i = 0; i < pendenciesTypes.length; i++){
+                    Path pathFile = Paths.get(folderConcluidos+"/"+pendenciesTypes[i]+".txt");
                     Files.createFile(pathFile);
                 }
             }
@@ -80,5 +86,28 @@ public class Arquives {
         this.createFolderConcluidos();
     }
     
+    public String[] getConfigTipos() throws IOException{
+        return Files.readAllLines(pathConfigFile).get(2).substring(6).split(",");
+    }
+    
+    public void addPendency(int logicPendencyType, String titulo, String tipo, String dataCriacao, String dataLimite, String descricao) throws FileNotFoundException, IOException{
+        PrintWriter printWriter = new PrintWriter(folderPendentes+"/"+pendenciesTypes[logicPendencyType]+".txt");
+        String lineConfig = Files.readAllLines(pathConfigFile).get(logicPendencyType);
+        int idPendency = Integer.parseInt(lineConfig.substring(lineConfig.indexOf(':')+1))+1;
+        
+        switch (logicPendencyType) {
+            case 0:
+                printWriter.printf("%d,%s,%s,%s,%s,%s", idPendency, titulo, tipo, dataCriacao, dataLimite, descricao);
+                printWriter.close();
+                break;
+            case 1:
+                printWriter.printf("%d,%s,%s,%s,%s", idPendency, titulo, tipo, dataCriacao, descricao);
+                printWriter.close();
+                break;
+        }
+            
+        
+          
+    }
     
 }

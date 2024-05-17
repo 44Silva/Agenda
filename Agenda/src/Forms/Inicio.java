@@ -1,8 +1,12 @@
 package Forms;
 
 import Classes.Arquives;
+import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.intellijthemes.FlatDarkFlatIJTheme;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 
@@ -14,10 +18,13 @@ import com.formdev.flatlaf.intellijthemes.FlatDarkFlatIJTheme;
  * @author fanbo
  */
 public class Inicio extends javax.swing.JFrame {
+    
+    
 
     /**
      * Creates new form Main
      */
+    
     public Inicio() {
         FlatLightLaf.setup();
         FlatDarkFlatIJTheme.setup();
@@ -36,22 +43,41 @@ public class Inicio extends javax.swing.JFrame {
         tablesRoot = new javax.swing.JTabbedPane();
         inicialTab = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jT_Tarefas = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        jT_Ideias = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Agenda");
+        setResizable(false);
+        addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                formFocusGained(evt);
+            }
+        });
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+                formWindowGainedFocus(evt);
+            }
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
+            }
+        });
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jT_Tarefas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
+                {"1", "gym", "Corpo", "", null},
+                {null, null, null, null, null},
                 {null, null, null, null, null},
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -62,23 +88,28 @@ public class Inicio extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
-            jTable1.getColumnModel().getColumn(4).setResizable(false);
+        jT_Tarefas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jT_TarefasMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jT_Tarefas);
+        if (jT_Tarefas.getColumnModel().getColumnCount() > 0) {
+            jT_Tarefas.getColumnModel().getColumn(0).setResizable(false);
+            jT_Tarefas.getColumnModel().getColumn(1).setResizable(false);
+            jT_Tarefas.getColumnModel().getColumn(2).setResizable(false);
+            jT_Tarefas.getColumnModel().getColumn(3).setResizable(false);
+            jT_Tarefas.getColumnModel().getColumn(4).setResizable(false);
         }
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        jT_Ideias.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -88,8 +119,41 @@ public class Inicio extends javax.swing.JFrame {
             new String [] {
                 "Id", "Lembrete", "Tipo", "Data de Criação"
             }
-        ));
-        jScrollPane2.setViewportView(jTable2);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jT_Ideias.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jT_IdeiasMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jT_Ideias);
+        if (jT_Ideias.getColumnModel().getColumnCount() > 0) {
+            jT_Ideias.getColumnModel().getColumn(0).setResizable(false);
+            jT_Ideias.getColumnModel().getColumn(1).setResizable(false);
+            jT_Ideias.getColumnModel().getColumn(2).setResizable(false);
+            jT_Ideias.getColumnModel().getColumn(3).setResizable(false);
+        }
+
+        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jButton1.setText("Concluir");
+
+        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jButton2.setText("Alterar");
+
+        jButton3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jButton3.setText("Adicionar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout inicialTabLayout = new javax.swing.GroupLayout(inicialTab);
         inicialTab.setLayout(inicialTabLayout);
@@ -99,8 +163,14 @@ public class Inicio extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(inicialTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2)
-                    .addComponent(jScrollPane1))
-                .addContainerGap(252, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1)
+                    .addGroup(inicialTabLayout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 224, Short.MAX_VALUE)
+                .addComponent(jButton3)
+                .addContainerGap())
         );
         inicialTabLayout.setVerticalGroup(
             inicialTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,6 +179,11 @@ public class Inicio extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(inicialTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -124,8 +199,22 @@ public class Inicio extends javax.swing.JFrame {
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane3.setViewportView(jTable3);
+        if (jTable3.getColumnModel().getColumnCount() > 0) {
+            jTable3.getColumnModel().getColumn(0).setResizable(false);
+            jTable3.getColumnModel().getColumn(1).setResizable(false);
+            jTable3.getColumnModel().getColumn(2).setResizable(false);
+            jTable3.getColumnModel().getColumn(3).setResizable(false);
+        }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -134,7 +223,7 @@ public class Inicio extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(252, Short.MAX_VALUE))
+                .addContainerGap(320, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -164,12 +253,33 @@ public class Inicio extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         Arquives arquivos = new Arquives();
         arquivos.setup();
     }//GEN-LAST:event_formWindowOpened
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        new NewPendency().setVisible(true);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusGained
+        
+    }//GEN-LAST:event_formFocusGained
+
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+        
+    }//GEN-LAST:event_formWindowGainedFocus
+
+    private void jT_TarefasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jT_TarefasMouseClicked
+        jT_Ideias.clearSelection(); 
+    }//GEN-LAST:event_jT_TarefasMouseClicked
+
+    private void jT_IdeiasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jT_IdeiasMouseClicked
+        jT_Tarefas.clearSelection();
+    }//GEN-LAST:event_jT_IdeiasMouseClicked
 
     /**
      * @param args the command line arguments
@@ -211,12 +321,15 @@ public class Inicio extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel inicialTab;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JTable jT_Ideias;
+    private javax.swing.JTable jT_Tarefas;
     private javax.swing.JTable jTable3;
     private javax.swing.JTabbedPane tablesRoot;
     // End of variables declaration//GEN-END:variables
