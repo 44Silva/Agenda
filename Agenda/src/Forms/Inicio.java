@@ -5,8 +5,12 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.intellijthemes.FlatDarkFlatIJTheme;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 
 
@@ -19,6 +23,7 @@ import java.util.logging.Logger;
  */
 public class Inicio extends javax.swing.JFrame {
     
+    Arquives arquivo = new Arquives();
     
 
     /**
@@ -76,12 +81,7 @@ public class Inicio extends javax.swing.JFrame {
 
         jT_Tarefas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"1", "gym", "Corpo", "", null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
                 "Id", "Tarefa", "Tipo", "Data de Criação", "Data Limite"
@@ -102,19 +102,13 @@ public class Inicio extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jT_Tarefas);
         if (jT_Tarefas.getColumnModel().getColumnCount() > 0) {
-            jT_Tarefas.getColumnModel().getColumn(0).setResizable(false);
-            jT_Tarefas.getColumnModel().getColumn(1).setResizable(false);
-            jT_Tarefas.getColumnModel().getColumn(2).setResizable(false);
-            jT_Tarefas.getColumnModel().getColumn(3).setResizable(false);
-            jT_Tarefas.getColumnModel().getColumn(4).setResizable(false);
+            jT_Tarefas.getColumnModel().getColumn(0).setPreferredWidth(50);
+            jT_Tarefas.getColumnModel().getColumn(0).setMaxWidth(50);
         }
 
         jT_Ideias.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Id", "Lembrete", "Tipo", "Data de Criação"
@@ -128,6 +122,7 @@ public class Inicio extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jT_Ideias.getTableHeader().setReorderingAllowed(false);
         jT_Ideias.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jT_IdeiasMouseClicked(evt);
@@ -135,10 +130,8 @@ public class Inicio extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jT_Ideias);
         if (jT_Ideias.getColumnModel().getColumnCount() > 0) {
-            jT_Ideias.getColumnModel().getColumn(0).setResizable(false);
-            jT_Ideias.getColumnModel().getColumn(1).setResizable(false);
-            jT_Ideias.getColumnModel().getColumn(2).setResizable(false);
-            jT_Ideias.getColumnModel().getColumn(3).setResizable(false);
+            jT_Ideias.getColumnModel().getColumn(0).setPreferredWidth(50);
+            jT_Ideias.getColumnModel().getColumn(0).setMaxWidth(50);
         }
 
         jButton1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -257,8 +250,19 @@ public class Inicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        Arquives arquivos = new Arquives();
-        arquivos.setup();
+        arquivo.setup();
+        try {
+            this.preencherTabela(jT_Tarefas, 0);
+            
+        } catch (IOException ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            this.preencherTabela(jT_Ideias, 1);
+        } catch (IOException ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_formWindowOpened
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -317,6 +321,31 @@ public class Inicio extends javax.swing.JFrame {
                 new Inicio().setVisible(true);
             }
         });
+    }
+    
+    public void preencherTabela(JTable tabela, int logicTypePendency) throws IOException{
+        DefaultTableModel modelo = (DefaultTableModel) tabela.getModel();
+        String line[] = {};
+        int size = arquivo.size(logicTypePendency);
+        if (arquivo.size(logicTypePendency) > 0){
+            
+            if(logicTypePendency == 0){
+                for(int i = 0; i < size; i++){
+                    line = arquivo.getPendencies(logicTypePendency, i);
+                    modelo.addRow(new Object[]{line[0], line[1], line[2], line[3], line[4]});
+                }
+            }
+            else if (logicTypePendency == 1){
+                for(int i = 0; i < size; i++){
+                    line = arquivo.getPendencies(logicTypePendency, i);
+                    if (line.length > 0){
+                        modelo.addRow(new Object[]{line[0], line[1], line[2], line[3]});
+                    }
+                }
+            }
+            
+        }
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

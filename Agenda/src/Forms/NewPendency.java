@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -261,7 +262,21 @@ public class NewPendency extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosed
 
     private void jB_ConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_ConfirmarActionPerformed
+        String tipo;
+        if (!check_tipo.isSelected()){
+            tipo = tf_NovoTipo.getText();
+        }
+        else {
+            tipo = cb_Tipo.getItemAt(cb_Tipo.getSelectedIndex());
+        }
+        try {
+            arquivos.addPendency(Boolean.compare(rb_Ideia.isSelected(), false), tf_Titulo.getText(), tipo, currentDateTime, tf_DataLimite.getText(), ta_Descricao.getText());   
+            this.dispose();
+        } catch (IOException ex) {
+            Logger.getLogger(NewPendency.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
+         
     }//GEN-LAST:event_jB_ConfirmarActionPerformed
 
     private void check_tipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_check_tipoActionPerformed
